@@ -1,9 +1,17 @@
 
+using AspNetCoreWithReact;
+using AspNetCoreWithReact.CustomMiddleware;
+using AspNetCoreWithReact.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IConsoleWriter, ConsoleWriter>();
+builder.Services.AddDbContext<AppDataContext>(x => x.UseSqlServer("CONNECTION STRING"));
+
 
 var app = builder.Build();
 
@@ -21,6 +29,7 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseMyMiddleware();
 
 
 app.MapControllerRoute(
