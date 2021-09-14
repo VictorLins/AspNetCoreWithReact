@@ -13,8 +13,35 @@ public class LibraryController : ControllerBase
     }
 
     [HttpGet]
-    public Library Get()
+    public IActionResult GetAll()
     {
-        return new Library();
+        List<Library> lResult = _ILibraryService.GetAll();
+        return Ok(lResult);
+    }
+
+    [HttpGet]
+    public IActionResult Search(string prName)
+    {
+        List<Library> lResult = _ILibraryService.GetByName(prName);
+        return Ok(lResult);
+    }
+
+    [HttpPut]
+    public IActionResult Update(Library prLibrary)
+    {
+        return Ok(_ILibraryService.Update(prLibrary));
+    }
+
+    [HttpPost]
+    public IActionResult Save(Library prLibrary)
+    {
+        return Ok(_ILibraryService.Save(prLibrary));
+    }
+
+    [HttpDelete]
+    public IActionResult Delete(Library prLibrary)
+    {
+        _ILibraryService.Delete(prLibrary);
+        return Ok();
     }
 }
