@@ -46,9 +46,10 @@ public class WeatherForecastController : ControllerBase
         _ILibraryService.Update(lLibraryToUpdate);
         */
 
-        /* DELETE LIBRARY */
+        /* DELETE LIBRARY 
         Library lLibraryToUpdate = _ILibraryService.GetByName("Test Library Updated").FirstOrDefault();
         _ILibraryService.Delete(lLibraryToUpdate);
+        */
 
 
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
