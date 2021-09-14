@@ -13,7 +13,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IConsoleWriter, ConsoleWriter>();
 builder.Services.AddTransient<ILibraryService, LibraryService>();
 builder.Services.AddDbContext<AppDataContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("AspNetAndReactCourse")));
-
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ASP.NET CORE API", Version = "v1" });
+});
 
 var app = builder.Build();
 
@@ -30,6 +33,13 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "React ASP.NET");
+});
+
 app.UseRouting();
 app.UseMyMiddleware();
 

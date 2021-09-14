@@ -11,4 +11,10 @@ public class LibraryController : ControllerBase
     {
         _ILibraryService = prILibraryService;
     }
+
+    [HttpGet]
+    public Library Get()
+    {
+        return new Library();
+    }
 }
