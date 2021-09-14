@@ -26,12 +26,30 @@ public class WeatherForecastController : ControllerBase
     [HttpGet]
     public IEnumerable<WeatherForecast> Get()
     {
-        // Dependency Injection
-        //_IConsoleWriter.Write();
+        /* Dependency Injection
+        _IConsoleWriter.Write();
+        */
 
-        /* GET LIBRARY*/
-        //List<Library> lLibraries = _ILibraryService.GetAll();
+        /* GET LIBRARY
+        List<Library> lLibraries = _ILibraryService.GetAll();
         List<Library> lLibraries = _ILibraryService.GetByName("YALE");
+        */
+
+        /* ADD LIBRARY
+        Library lNewLibrary = new Library() { Name = "Test Library", Address = "Test Address", Telephone = "123456789" };
+        _ILibraryService.Save(lNewLibrary);
+        */
+
+        /* UPDATE LIBRARY 
+        Library lLibraryToUpdate = _ILibraryService.GetByName("Test Library").FirstOrDefault();
+        lLibraryToUpdate.Name = "Test Library Updated";
+        _ILibraryService.Update(lLibraryToUpdate);
+        */
+
+        /* DELETE LIBRARY */
+        Library lLibraryToUpdate = _ILibraryService.GetByName("Test Library Updated").FirstOrDefault();
+        _ILibraryService.Delete(lLibraryToUpdate);
+
 
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {

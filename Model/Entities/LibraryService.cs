@@ -25,15 +25,24 @@ public class LibraryService : ILibraryService
 
     public Library Save(Library prLibrary)
     {
-        return null;
+        _context.Libraries.Add(prLibrary);
+        _context.SaveChanges();
+
+        return prLibrary;
     }
 
     public Library Update(Library prLibrary)
     {
-        return null;
+        Library lLibraryFromDB = _context.Libraries.First(x => x.Id == prLibrary.Id);
+        _context.Entry(lLibraryFromDB).CurrentValues.SetValues(prLibrary);
+        _context.SaveChanges();
+
+        return prLibrary;
     }
 
     public void Delete(Library prLibrary)
     {
+        _context.Entry(prLibrary).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+        _context.SaveChanges();
     }
 }
