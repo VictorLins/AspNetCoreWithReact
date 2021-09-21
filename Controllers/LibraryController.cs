@@ -20,7 +20,7 @@ public class LibraryController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Search(string prName)
+    public IActionResult Search(string prName = "")
     {
         List<Library> lResult = _ILibraryService.GetByName(prName);
         return Ok(lResult);

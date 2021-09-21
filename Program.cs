@@ -34,6 +34,8 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true));
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
