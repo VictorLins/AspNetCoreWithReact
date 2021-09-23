@@ -27,10 +27,10 @@ const LibraryComponent = (props) => {
         librariesNewReference[index] = { ...prLibrary, [name]: value }; // Update just the specific property keeping the others
         setLibrariesList(librariesNewReference);
     }
-    const editLibrary = (prLibrary) => {
+    const updateEditingStatus = (prLibrary, prFlag) => {
         let librariesNewReference = [...librariesList]; // Create a copy of the object with new reference (new space in memory)
         const index = librariesNewReference.findIndex((item) => item.name == prLibrary.name);
-        librariesNewReference[index].isEditing = true;
+        librariesNewReference[index].isEditing = prFlag;
         setLibrariesList(librariesNewReference);
     }
     const confirmUpdate = (prLibrary) => {
@@ -41,6 +41,32 @@ const LibraryComponent = (props) => {
             librariesNewReference[index].isEditing = false;
             setLibrariesList(librariesNewReference);
         })
+    }
+
+    /* INSERT */
+    const [libraryToAdd, setLibraryToAdd] = useState({ name: '', address: '', telephone: '' });
+    const handleLibraryToAddInputChange = (prInput) => {
+        const { name, value } = prInput.target;
+        let libraryToAddNewReference = { ...libraryToAdd, [name]: value };
+        setLibraryToAdd(libraryToAddNewReference);
+    }
+    const confirmNewLibrary = () => {
+        axios.post("https://localhost:5001/api/Library/Save", libraryToAdd).then(response => {
+            let librariesNewReference = [...librariesList];
+            librariesNewReference.push(response.data);
+            setLibrariesList(librariesNewReference);
+            setLibraryToAdd({ name: '', address: '', telephone: '' }); // Clear the state
+        })
+    }
+
+    /* DELETE */
+    const deleteLibrary = (prLibrary) => {
+        axios.delete("https://localhost:5001/api/Library/Delete", {data: prLibrary}).then(response => {
+            let librariesNewReference = [...librariesList];
+            const index = librariesNewReference.findIndex((item) => item.name == prLibrary.name);
+            librariesNewReference.splice(index, 1); // Remove item from list
+            setLibrariesList(librariesNewReference);
+        });
     }
 
     return (
@@ -77,19 +103,19 @@ const LibraryComponent = (props) => {
                             <div className="row">
                                 <div className="col-md-3">
                                     <label className="form-label">Name</label>
-                                    <input className="form-control" placeholder="Enter Name" name="name" type="text" />
+                                    <input className="form-control" placeholder="Enter Name" name="name" value={libraryToAdd.name} onChange={handleLibraryToAddInputChange.bind(this)} type="text" />
                                 </div>
                                 <div className="col-md-4">
                                     <label className="form-label">Address</label>
-                                    <input className="form-control" placeholder="Enter Address" name="address" type="text" />
+                                    <input className="form-control" placeholder="Enter Address" name="address" value={libraryToAdd.address} onChange={handleLibraryToAddInputChange.bind(this)} type="text" />
                                 </div>
                                 <div className="col-md-3">
                                     <label className="form-label">Telephone</label>
-                                    <input className="form-control" placeholder="Enter Telephone" name="telephone" type="text" />
+                                    <input className="form-control" placeholder="Enter Telephone" name="telephone" value={libraryToAdd.telephone} onChange={handleLibraryToAddInputChange.bind(this)} type="text" />
                                 </div>
                                 <div className="col-md-2">
                                     <label className="form-label">&nbsp;</label>
-                                    <button type="button" className="btn btn-success form-control">Save</button>
+                                    <button type="button" className="btn btn-success form-control" onClick={confirmNewLibrary.bind(this)}>Save</button>
                                 </div>
                             </div>
                         </div>
@@ -118,8 +144,10 @@ const LibraryComponent = (props) => {
                                     <td><input className="form-control" value={item.telephone} onChange={handleLibraryInputChange.bind(this, item)} name="telephone" disabled={!item.isEditing} /></td>
                                     <td>
                                         <div className="btn-toolbar">
-                                            <button type="button" className="btn btn-info mr-2" onClick={editLibrary.bind(this, item)} style={{ display: item.isEditing ? 'none' : 'block' }}>Edit</button>
+                                            <button type="button" className="btn btn-info mr-2" onClick={updateEditingStatus.bind(this, item, true)} style={{ display: item.isEditing ? 'none' : 'block' }}>Edit</button>
+                                            <button type="button" className="btn btn-warning mr-2" onClick={updateEditingStatus.bind(this, item, false)} style={{ display: item.isEditing ? 'block' : 'none' }}>Cancel</button>
                                             <button type="button" className="btn btn-success mr-2" onClick={confirmUpdate.bind(this, item)} style={{ display: item.isEditing ? 'block' : 'none' }}>Save</button>
+                                            <button type="button" className="btn btn-danger mr-2" onClick={deleteLibrary.bind(this, item)}>Delete</button>
                                         </div>
                                     </td>
                                 </tr>
